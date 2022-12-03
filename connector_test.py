@@ -1,5 +1,5 @@
 import mysql.connector
-# from flask import Flask , jsonify
+from flask import Flask , jsonify
 
 # Create the connection object
 myconn = mysql.connector.connect(host="kindletestdata.czend6kabecw.ap-south-1.rds.amazonaws.com", user="admin", passwd="Yashcse1", database="Kindlebookdata")
@@ -49,10 +49,10 @@ for row in record:
 myconn.close()
 
 
-# app = Flask(__name__)
-# @app.route('/')
-# def hello():
-    # return password
+app = Flask(__name__)
+@app.route('/')
+def hello():
+    return password
 
-# if __name__ =="__main__":
-   #  app.run(debug = True)
+if __name__ =="__main__":
+   app.run(debug = True)
