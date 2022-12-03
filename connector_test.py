@@ -1,8 +1,9 @@
 import mysql.connector
-from flask import Flask , jsonify
+from flask import Flask, jsonify, render_template
 
 # Create the connection object
-myconn = mysql.connector.connect(host="kindletestdata.czend6kabecw.ap-south-1.rds.amazonaws.com", user="admin", passwd="Yashcse1", database="Kindlebookdata")
+myconn = mysql.connector.connect(host="kindletestdata.czend6kabecw.ap-south-1.rds.amazonaws.com", user="admin",
+                                 passwd="Yashcse1", database="Kindlebookdata")
 
 # printing the connection object
 print(myconn)
@@ -10,49 +11,55 @@ print(myconn)
 # creating the cursor object
 cur = myconn.cursor()
 
-# sql = "insert into new_table(id,name,book) values (%s, %s, %s)"
+# sql = "insert into book_data(book_id,book_name,book_pdf) values (%s, %s, %s)"
 # with open("CGAS_ASS1.pdf", 'rb') as file:
-# binaryData = file.read()
-
+#     binaryData = file.read()
+#
 # empPicture = binaryData
-
-# Convert data into tuple format
-# insert_blob_tuple = (6, "tets_book", empPicture)
-
+#
+# # Convert data into tuple format
+# insert_blob_tuple = (1, "tets_book", empPicture)
+#
 # try:
-# inserting the values into the table
-# result = cur.execute(sql, insert_blob_tuple)
-# print("Image and file inserted successfully as a BLOB into python_employee table", result)
-
-# commit the transaction
-# myconn.commit()
-
+#     # inserting the values into the table
+#     result = cur.execute(sql, insert_blob_tuple)
+#     # print("Image and file inserted successfully as a BLOB into python_employee table", result)
+#
+#     # commit the transaction
+#     myconn.commit()
+#
 # except:
-# myconn.rollback()
+#     myconn.rollback()
 
-
-sql_fetch_blob_query = """SELECT * from user_data where user_id = %s"""
+sql_fetch_blob_query = """SELECT * from book_data where book_id = %s"""
 cur.execute(sql_fetch_blob_query, (1,))
 record = cur.fetchall()
 for row in record:
     print("Id = ", row[0], )
     print("Name = ", row[1])
-    password = row[1]
-    print("Storing employee image and bio-data on disk \n")
-    print(password)
-    # with open("tetsing.pdf", 'wb') as file:
-    # file.write(file1)
+    book_data = row[2]
+    book_n = row[1]
+    # print("Storing employee image and bio-data on disk \n")
+    print(row[1])
+
+app = Flask(__name__)
 
 
+@app.route('/')
+@app.route('/hello')
+def hello():
+    return render_template("indexing.html", book_name=book_n)
+
+
+@app.route("/book",methods = ['POST'])
+def book():
+    with open("testing2.pdf", 'wb') as file:
+        file.write(book_data)
+    return "hello"
 
 
 myconn.close()
 
-
-app = Flask(__name__)
-@app.route('/')
-def hello():
-    return password
-
-if __name__ =="__main__":
-   app.run(host = '0.0.0.0',port=8080)
+if __name__ == "__main__":
+    # app.run(host='0.0.0.0', port=8080)
+    app.run(debug=True)
