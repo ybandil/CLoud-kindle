@@ -5,8 +5,41 @@
 <title>Dropdown</title>
 </head>
 <body>
-<form action="{{ url_for('book') }}">
-    <input type="submit" value="{{book_name}}">
+<form action="{{ url_for('book') }}" id="buttons" method="post">
+
 </form>
+
+
+<script>
+var Object1 = {
+    icon: "map",
+    tooltip: "Press Me",
+    press: 'console.log("Button1 pressed")'
+};
+var Object2 = {
+    icon: "map",
+    tooltip: "Press Me",
+    press: 'console.log("Button2 pressed")'
+};
+var Object3 = {
+    icon: "map",
+    tooltip: "Press Me",
+    press: 'console.log("Button3 pressed")'
+};
+
+
+var ar = {{book_name | tojson}};
+
+ar.forEach(function(v) {
+
+    var button= document.createElement('input');
+    button.type = 'submit'
+    button.name = 'test'
+    button.value= v
+    button.appendChild(document.createTextNode(v));
+
+  document.getElementById("buttons").appendChild(button);
+ } );
+</script>
 </body>
 </html>

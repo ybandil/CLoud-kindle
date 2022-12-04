@@ -2,7 +2,7 @@ from io import BytesIO
 from wsgiref.util import FileWrapper
 
 import mysql.connector
-from flask import Flask, jsonify, render_template, send_file
+from flask import Flask, jsonify, render_template, send_file,request
 
 # Create the connection object
 myconn = mysql.connector.connect(host="kindletestdata.czend6kabecw.ap-south-1.rds.amazonaws.com", user="admin",
@@ -16,12 +16,12 @@ cur = myconn.cursor()
 
 # sql = "insert into book_data(book_id,book_name,book_pdf) values (%s, %s, %s)"
 #
-# with open("CGAS_ASS1.pdf", 'rb') as file:
+# with open("customer.pdf", 'rb') as file:
 #     binaryData = file.read()
 #
 # empPicture = binaryData
 # # Convert data into tuple format
-# insert_blob_tuple = (2, "new_book", empPicture)
+# insert_blob_tuple = (3, "short_stories", empPicture)
 #
 # try:
 #     # inserting the values into the table
@@ -32,42 +32,59 @@ cur = myconn.cursor()
 #     myconn.commit()
 #
 # except:
-#     myconn.rollback()rollback
+#     myconn.rollback()
 
-sql_fetch_blob_query = """SELECT * from book_data where book_id = %s"""
-cur.execute(sql_fetch_blob_query, (1,))
+sql_fetch_blob_query = """SELECT book_name from book_data"""
+cur.execute(sql_fetch_blob_query)
 record = cur.fetchall()
+print(len(record))
+name1 = []
 for row in record:
-    print("Id = ", row[0], )
-    print("Name = ", row[1])
-    book_data = row[2]
-    book_n = row[1]
+    name1.append(row[0])
+    #print("Name = ", row[1])
+    #book_data = row[2]
+    #book_n = row[1]
     # print("Storing employee image and bio-data on disk \n")
-    print(row[1])
+    #print(row[1])
 
+print(name1)
 app = Flask(__name__)
 
+global boo_data
 
 @app.route('/')
 @app.route('/hello')
 def hello():
-    return render_template("indexing.html",book_name=book_n)
+    return render_template("indexing.html",book_name=name1)
 
 
-@app.route('/book')
+@app.route('/book',methods = ['POST'])
 def book():
-    return render_template("indexing2.html")
+    print("ram")
+    select = request.form.get("test")
+    print(select)
 
 
-@app.route('/image_route')
-def image_route():
-    bytes_io = BytesIO(book_data)
+    # print("Storing employee image and bio-data on disk \n"
+    return render_template("indexing2.html", filename=select)
+
+
+@app.route('/image_route/<filename>')
+def image_route(filename):
+    myconn._open_connection()
+    cur1 = myconn.cursor()
+    sql_fetch_blob_quer = """SELECT book_pdf from book_data where book_name = %s"""
+    cur1.execute(sql_fetch_blob_quer, (filename,))
+    recor = cur.fetchall()
+    for ro in recor:
+        boo_data = ro[0]
+    bytes_io = BytesIO(boo_data)
     print("----------------------------")
-    return send_file(bytes_io, download_name="test.pdf", mimetype="application/pdf")
+    return send_file(bytes_io, download_name=filename+".pdf", mimetype="application/pdf")
 
 
 myconn.close()
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)
-    #app.run(debug=True)
+    #app.run(host='0.0.0.0', port=8080)
+    app.run(debug=True)

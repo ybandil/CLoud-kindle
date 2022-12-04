@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<style>
+button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity:1;
+}
+
+/* Extra styles for the cancel button */
+.loginbtn {
+  padding: 14px 20px;
+  background-color: #0000FF;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.loginbtn, .signupbtn {
+  float: left;
+  width: 30%;
+}
+
+/* Add padding to container elements */
+.container {
+  padding: 16px;
+}
+
+/* Clear floats */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Change styles for cancel button and signup button on extra small screens */
+@media screen and (max-width: 300px) {
+  .loginbtn, .signupbtn {
+     width: 100%;
+  }
+}
+</style>
+<body>
+<div style="margin-top:300px">
+    <button type="submit" class="signupbtn" style="margin-left:80px">Signup</button>
+    <button type="button" class="loginbtn" style="margin-left:25px">Login</button>
+</div>
+</body>
+</html>
