@@ -2,7 +2,7 @@ from io import BytesIO
 from wsgiref.util import FileWrapper
 
 import mysql.connector
-from flask import Flask, jsonify, render_template, send_file,request
+from flask import Flask, jsonify, render_template, send_file, request
 
 # Create the connection object
 myconn = mysql.connector.connect(host="kindletestdata.czend6kabecw.ap-south-1.rds.amazonaws.com", user="admin",
@@ -41,29 +41,27 @@ print(len(record))
 name1 = []
 for row in record:
     name1.append(row[0])
-    #print("Name = ", row[1])
-    #book_data = row[2]
-    #book_n = row[1]
+    # print("Name = ", row[1])
+    # book_data = row[2]
+    # book_n = row[1]
     # print("Storing employee image and bio-data on disk \n")
-    #print(row[1])
+    # print(row[1])
 
 print(name1)
 app = Flask(__name__)
 
-global boo_data
 
 @app.route('/')
 @app.route('/hello')
 def hello():
-    return render_template("indexing.html",book_name=name1)
+    return render_template("indexing.html", book_name=name1)
 
 
-@app.route('/book',methods = ['POST'])
+@app.route('/book', methods=['POST'])
 def book():
     print("ram")
     select = request.form.get("test")
     print(select)
-
 
     # print("Storing employee image and bio-data on disk \n"
     return render_template("indexing2.html", filename=select)
@@ -80,11 +78,11 @@ def image_route(filename):
         boo_data = ro[0]
     bytes_io = BytesIO(boo_data)
     print("----------------------------")
-    return send_file(bytes_io, download_name=filename+".pdf", mimetype="application/pdf")
+    return send_file(bytes_io, download_name=filename + ".pdf", mimetype="application/pdf")
 
 
 myconn.close()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
-    #app.run(debug=True)
+    # app.run(debug=True)
