@@ -1,5 +1,8 @@
+from io import BytesIO
+from wsgiref.util import FileWrapper
+
 import mysql.connector
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, send_file
 
 # Create the connection object
 myconn = mysql.connector.connect(host="kindletestdata.czend6kabecw.ap-south-1.rds.amazonaws.com", user="admin",
@@ -12,13 +15,13 @@ print(myconn)
 cur = myconn.cursor()
 
 # sql = "insert into book_data(book_id,book_name,book_pdf) values (%s, %s, %s)"
+#
 # with open("CGAS_ASS1.pdf", 'rb') as file:
 #     binaryData = file.read()
 #
 # empPicture = binaryData
-#
 # # Convert data into tuple format
-# insert_blob_tuple = (1, "tets_book", empPicture)
+# insert_blob_tuple = (2, "new_book", empPicture)
 #
 # try:
 #     # inserting the values into the table
@@ -29,7 +32,7 @@ cur = myconn.cursor()
 #     myconn.commit()
 #
 # except:
-#     myconn.rollback()
+#     myconn.rollback()rollback
 
 sql_fetch_blob_query = """SELECT * from book_data where book_id = %s"""
 cur.execute(sql_fetch_blob_query, (1,))
@@ -48,14 +51,19 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/hello')
 def hello():
-    return render_template("indexing.html", book_name=book_n)
+    return render_template("indexing.html",book_name=book_n)
 
 
-@app.route("/book",methods = ['POST'])
+@app.route('/book')
 def book():
-    with open("testing2.pdf", 'wb') as file:
-        file.write(book_data)
-    return "hello"
+    return render_template("indexing2.html")
+
+
+@app.route('/image_route')
+def image_route():
+    bytes_io = BytesIO(book_data)
+    print("----------------------------")
+    return send_file(bytes_io, download_name="test.pdf", mimetype="application/pdf")
 
 
 myconn.close()
