@@ -73,7 +73,7 @@ def image_route(filename):
     cur1 = myconn.cursor()
     sql_fetch_blob_quer = """SELECT book_pdf from book_data where book_name = %s"""
     cur1.execute(sql_fetch_blob_quer, (filename,))
-    recor = cur.fetchall()
+    recor = cur1.fetchall()
     for ro in recor:
         boo_data = ro[0]
     bytes_io = BytesIO(boo_data)
